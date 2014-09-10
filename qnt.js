@@ -3,12 +3,23 @@
 
 
 (function() {
-  var quantifyObject;
+  var getQueryString, quantifyObject;
+
+  getQueryString = function(obj) {
+    var k, s, v;
+    s = [];
+    for (k in obj) {
+      v = obj[k];
+      s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+    return s.join("&");
+  };
 
   quantifyObject = {
     _version: "0.0.1",
-    _key: "ASCASS",
-    _project: "",
+    _key: "key",
+    _project: "earth_tapestry",
+    _allowedEntities: ['displayMetrics'],
     init: function(projectName, key) {
       this._project = projectName;
       this._key = key;
@@ -28,7 +39,31 @@
     vote: function() {},
     getSearchResults: function() {},
     getResults: function() {},
-    _quantifyHTTP: function() {}
+    getMetrics: function(limit, mode, callback) {
+      var data;
+      data = {
+        limit: limit,
+        mode: mode
+      };
+      return this._quantifyHTTP("get", "displaymetrics", data, callback);
+    },
+    _quantifyHTTP: function(method, entity, data, callback) {
+      var base, qntData, url, xhr;
+      base = "http://quantify.media.mit.edu:8888/api";
+      qntData = {
+        pID: this._project,
+        key: this._key
+      };
+      url = base + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
+      console.log("Full Request URL:", url);
+      xhr = new XMLHttpRequest();
+      xhr.overrideMimeType("application/json");
+      xhr.onload = function(resp) {
+        return callback(JSON.parse(resp.target.responseText));
+      };
+      xhr.open(method, url, true);
+      return xhr.send();
+    }
   };
 
   window.qnt = quantifyObject;
