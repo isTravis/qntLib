@@ -4,7 +4,8 @@
 getQueryString = (obj) ->
     s = []
     for k, v of obj
-        s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
+        if v
+            s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
     s.join("&")
 
 quantifyObject = 
@@ -12,10 +13,6 @@ quantifyObject =
     _key: "key"
     _base_url: "http://quantify.media.mit.edu:8888/api"
     _project: "earth_tapestry"
-    # List of all entities it's valid to request
-    _allowedEntities: [
-        'displayMetrics'
-    ]
 
     init: (projectName, key)->
         @_project = projectName
@@ -28,7 +25,8 @@ quantifyObject =
 
     getAccount: -> return
     setAccount: -> return
-    getSearchResults: (mID, metric_score, skip=None, limit=None) -> 
+
+    getSearchResults: (mID, metric_score, [skip, limit]..., callback) -> 
         data = 
             mID: mID
             metric_score: metric_score
@@ -41,22 +39,23 @@ quantifyObject =
             mID: mID
         @_quantifyHTTP("get", "metric", data, callback)
 
-    vote: (mID, vote_data, vote_result, voter_ip) -> 
+    vote: (mID, vote_data, uID, vote_result, [voter_ip]..., callback) -> 
         data = 
             mID: mID
+            uID: uID
             vote_data: vote_data
             vote_result: vote_result
             voter_ip: voter_ip
         @_quantifyHTTP("post", "vote", data, callback)            
 
-    getContestants: (mID, mode, num_desired_contestants=None) ->
+    getContestants: (mID, mode, [num_desired_contestants]..., callback) ->
         data = 
             mID: mID
             mode: mode
             num_desired_contestants: num_desired_contestantso
         @_quantifyHTTP("get", "contestants", data, callback)
 
-    getResults: (mID, sort=None, skip=None, limit=None) ->
+    getResults: (mID, [sort, skip, limit]..., callback) ->
         data = 
             mID: mID
             sort: sort
@@ -64,7 +63,7 @@ quantifyObject =
             limit: limit
         @_quantifyHTTP("get", "results", data, callback)
 
-    getDisplayMetrics: (mode, limit=None, callback) -> 
+    getDisplayMetrics: (mode, [limit]..., callback) -> 
         data =
             mode: mode
             limit: limit
@@ -77,7 +76,6 @@ quantifyObject =
             pID: @_project
             key: @_key
         url = @_base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData)
-        console.log("Full Request URL:", url)
         xhr = new XMLHttpRequest()
         xhr.overrideMimeType("application/json"); 
         xhr.onload = (resp) ->

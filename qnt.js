@@ -3,14 +3,17 @@
 
 
 (function() {
-  var getQueryString, quantifyObject;
+  var getQueryString, quantifyObject,
+    __slice = [].slice;
 
   getQueryString = function(obj) {
     var k, s, v;
     s = [];
     for (k in obj) {
       v = obj[k];
-      s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      if (v) {
+        s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      }
     }
     return s.join("&");
   };
@@ -20,7 +23,6 @@
     _key: "key",
     _base_url: "http://quantify.media.mit.edu:8888/api",
     _project: "earth_tapestry",
-    _allowedEntities: ['displayMetrics'],
     init: function(projectName, key) {
       this._project = projectName;
       this._key = key;
@@ -36,14 +38,10 @@
     },
     getAccount: function() {},
     setAccount: function() {},
-    getSearchResults: function(mID, metric_score, skip, limit) {
-      var data;
-      if (skip == null) {
-        skip = None;
-      }
-      if (limit == null) {
-        limit = None;
-      }
+    getSearchResults: function() {
+      var callback, data, limit, mID, metric_score, skip, _arg, _i;
+      mID = arguments[0], metric_score = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
+      skip = _arg[0], limit = _arg[1];
       data = {
         mID: mID,
         metric_score: metric_score,
@@ -59,21 +57,23 @@
       };
       return this._quantifyHTTP("get", "metric", data, callback);
     },
-    vote: function(mID, vote_data, vote_result, voter_ip) {
-      var data;
+    vote: function() {
+      var callback, data, mID, uID, vote_data, vote_result, voter_ip, _arg, _i;
+      mID = arguments[0], vote_data = arguments[1], uID = arguments[2], vote_result = arguments[3], _arg = 6 <= arguments.length ? __slice.call(arguments, 4, _i = arguments.length - 1) : (_i = 4, []), callback = arguments[_i++];
+      voter_ip = _arg[0];
       data = {
         mID: mID,
+        uID: uID,
         vote_data: vote_data,
         vote_result: vote_result,
         voter_ip: voter_ip
       };
       return this._quantifyHTTP("post", "vote", data, callback);
     },
-    getContestants: function(mID, mode, num_desired_contestants) {
-      var data;
-      if (num_desired_contestants == null) {
-        num_desired_contestants = None;
-      }
+    getContestants: function() {
+      var callback, data, mID, mode, num_desired_contestants, _arg, _i;
+      mID = arguments[0], mode = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
+      num_desired_contestants = _arg[0];
       data = {
         mID: mID,
         mode: mode,
@@ -81,17 +81,10 @@
       };
       return this._quantifyHTTP("get", "contestants", data, callback);
     },
-    getResults: function(mID, sort, skip, limit) {
-      var data;
-      if (sort == null) {
-        sort = None;
-      }
-      if (skip == null) {
-        skip = None;
-      }
-      if (limit == null) {
-        limit = None;
-      }
+    getResults: function() {
+      var callback, data, limit, mID, skip, sort, _arg, _i;
+      mID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
+      sort = _arg[0], skip = _arg[1], limit = _arg[2];
       data = {
         mID: mID,
         sort: sort,
@@ -100,11 +93,10 @@
       };
       return this._quantifyHTTP("get", "results", data, callback);
     },
-    getDisplayMetrics: function(mode, limit, callback) {
-      var data;
-      if (limit == null) {
-        limit = None;
-      }
+    getDisplayMetrics: function() {
+      var callback, data, limit, mode, _arg, _i;
+      mode = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
+      limit = _arg[0];
       data = {
         mode: mode,
         limit: limit
@@ -118,7 +110,6 @@
         key: this._key
       };
       url = this._base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
-      console.log("Full Request URL:", url);
       xhr = new XMLHttpRequest();
       xhr.overrideMimeType("application/json");
       xhr.onload = function(resp) {
