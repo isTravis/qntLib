@@ -18,6 +18,7 @@
   quantifyObject = {
     _version: "0.0.1",
     _key: "key",
+    _base_url: "http://quantify.media.mit.edu:8888/api",
     _project: "earth_tapestry",
     _allowedEntities: ['displayMetrics'],
     init: function(projectName, key) {
@@ -33,28 +34,90 @@
     getProjectName: function() {
       return this._project;
     },
-    getContestents: function() {},
     getAccount: function() {},
     setAccount: function() {},
-    vote: function() {},
-    getSearchResults: function() {},
-    getResults: function() {},
-    getMetrics: function(limit, mode, callback) {
+    getSearchResults: function(mID, metric_score, skip, limit) {
+      var data;
+      if (skip == null) {
+        skip = None;
+      }
+      if (limit == null) {
+        limit = None;
+      }
+      data = {
+        mID: mID,
+        metric_score: metric_score,
+        skip: skip,
+        limit: limit
+      };
+      return this._quantifyHTTP("get", "search", data, callback);
+    },
+    getMetrics: function(mID) {
       var data;
       data = {
-        limit: limit,
-        mode: mode
+        mID: mID
+      };
+      return this._quantifyHTTP("get", "metric", data, callback);
+    },
+    vote: function(mID, vote_data, vote_result, voter_ip) {
+      var data;
+      data = {
+        mID: mID,
+        vote_data: vote_data,
+        vote_result: vote_result,
+        voter_ip: voter_ip
+      };
+      return this._quantifyHTTP("post", "vote", data, callback);
+    },
+    getContestants: function(mID, mode, num_desired_contestants) {
+      var data;
+      if (num_desired_contestants == null) {
+        num_desired_contestants = None;
+      }
+      data = {
+        mID: mID,
+        mode: mode,
+        num_desired_contestants: num_desired_contestantso
+      };
+      return this._quantifyHTTP("get", "contestants", data, callback);
+    },
+    getResults: function(mID, sort, skip, limit) {
+      var data;
+      if (sort == null) {
+        sort = None;
+      }
+      if (skip == null) {
+        skip = None;
+      }
+      if (limit == null) {
+        limit = None;
+      }
+      data = {
+        mID: mID,
+        sort: sort,
+        skip: skip,
+        limit: limit
+      };
+      return this._quantifyHTTP("get", "results", data, callback);
+    },
+    getDisplayMetrics: function(mode, limit, callback) {
+      var data;
+      if (limit == null) {
+        limit = None;
+      }
+      data = {
+        mode: mode,
+        limit: limit
       };
       return this._quantifyHTTP("get", "displaymetrics", data, callback);
     },
     _quantifyHTTP: function(method, entity, data, callback) {
-      var base, qntData, url, xhr;
-      base = "http://quantify.media.mit.edu:8888/api";
+      var qntData, url, xhr;
       qntData = {
         pID: this._project,
         key: this._key
       };
-      url = base + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
+      url = this._base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
       console.log("Full Request URL:", url);
       xhr = new XMLHttpRequest();
       xhr.overrideMimeType("application/json");
