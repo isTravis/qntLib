@@ -8,23 +8,42 @@ getQueryString = (obj) ->
             s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
     s.join("&")
 
+adjectives = []
+color = []
+nationality = []
+animals = []
+
+getAccountName = () ->
+    return
+
 quantifyObject = 
     _version: "0.0.1"
     _key: "key"
+    _user: ""
     _base_url: "http://quantify.media.mit.edu:8888/api"
     _project: "earth_tapestry"
 
     init: (projectName, key)->
         @_project = projectName
         @_key = key
+        console.log('in init')
+        @_quantifyHTTP("get", "user", data, (user) -> 
+            console.log(result)
+            @_user = result.user)
         return
 
     getKey: -> @_key
     getVersion: -> @_version
+    getUser: -> @_user
     getProjectName: -> @_project
 
-    getAccount: -> return
-    setAccount: -> return
+    setAccount: (user) -> 
+        # TODO Validate user
+        if validatedUser(user)
+            @_user = user
+            return true
+        else
+            return false
 
     getSearchResults: (mID, metric_score, [skip, limit]..., callback) -> 
         data = 

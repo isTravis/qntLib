@@ -3,7 +3,7 @@
 
 
 (function() {
-  var getQueryString, quantifyObject,
+  var adjectives, animals, color, getAccountName, getQueryString, nationality, quantifyObject,
     __slice = [].slice;
 
   getQueryString = function(obj) {
@@ -18,14 +18,30 @@
     return s.join("&");
   };
 
+  adjectives = [];
+
+  color = [];
+
+  nationality = [];
+
+  animals = [];
+
+  getAccountName = function() {};
+
   quantifyObject = {
     _version: "0.0.1",
     _key: "key",
+    _user: "",
     _base_url: "http://quantify.media.mit.edu:8888/api",
     _project: "earth_tapestry",
     init: function(projectName, key) {
       this._project = projectName;
       this._key = key;
+      console.log('in init');
+      this._quantifyHTTP("get", "user", data, function(user) {
+        console.log(result);
+        return this._user = result.user;
+      });
     },
     getKey: function() {
       return this._key;
@@ -33,11 +49,20 @@
     getVersion: function() {
       return this._version;
     },
+    getUser: function() {
+      return this._user;
+    },
     getProjectName: function() {
       return this._project;
     },
-    getAccount: function() {},
-    setAccount: function() {},
+    setAccount: function(user) {
+      if (validatedUser(user)) {
+        this._user = user;
+        return true;
+      } else {
+        return false;
+      }
+    },
     getSearchResults: function() {
       var callback, data, limit, mID, metric_score, skip, _arg, _i;
       mID = arguments[0], metric_score = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
