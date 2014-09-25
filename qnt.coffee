@@ -27,12 +27,18 @@ quantifyObject =
         @_key = key
 
         # Check for cookie
+        @_quantifyHTTP("get", "checkusercookie", {}, (checkCookieResult)->
+            # If you found a cookie - awesome. Set user 
+            if checkCookieResult[0]['uID']
+                qnt._user = checkCookieResult[0]['uID']
 
-
-        # console.log('in init')
-        # @_quantifyHTTP("get", "user", data, (user) -> 
-        #     console.log(result)
-        #     @_user = result.user)
+            # If you didn't find a cookie, else, create a new username and then set current user                
+            else
+                console.log "No cookie found. Creating new user"
+                qnt._quantifyHTTP("get", "createuser", {}, (e)->
+                    qnt._user=e['uID']
+                )
+        )
         return
 
     getKey: -> @_key

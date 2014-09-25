@@ -29,6 +29,16 @@
     init: function(projectName, key) {
       this._project = projectName;
       this._key = key;
+      this._quantifyHTTP("get", "checkusercookie", {}, function(checkCookieResult) {
+        if (checkCookieResult[0]['uID']) {
+          return qnt._user = checkCookieResult[0]['uID'];
+        } else {
+          console.log("No cookie found. Creating new user");
+          return qnt._quantifyHTTP("get", "createuser", {}, function(e) {
+            return qnt._user = e['uID'];
+          });
+        }
+      });
     },
     getKey: function() {
       return this._key;
