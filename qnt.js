@@ -23,7 +23,7 @@
   quantifyObject = {
     _version: "0.0.1",
     _base_url: "https://www.qnt.io/api",
-    _project: "earth_tapestry",
+    _project: "",
     _key: "key",
     _user: "",
     init: function(projectName, key) {
@@ -66,6 +66,20 @@
         return false;
       }
     },
+    getContent: function(cID, callback) {
+      var data;
+      data = {
+        cID: cID
+      };
+      return this._quantifyHTTP("get", "content", data, callback);
+    },
+    getScores: function(cID, callback) {
+      var data;
+      data = {
+        cID: cID
+      };
+      return this._quantifyHTTP("get", "scores", data, callback);
+    },
     getSearchResults: function() {
       var callback, data, limit, mID, metric_score, skip, _arg, _i;
       mID = arguments[0], metric_score = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
@@ -105,14 +119,14 @@
       data = {
         mID: mID,
         mode: mode,
-        num_desired_contestants: num_desired_contestantso
+        num_desired_contestants: num_desired_contestants
       };
       return this._quantifyHTTP("get", "contestants", data, callback);
     },
     getResults: function() {
       var callback, data, limit, mID, skip, sort, _arg, _i;
       mID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
-      sort = _arg[0], skip = _arg[1], limit = _arg[2];
+      limit = _arg[0], skip = _arg[1], sort = _arg[2];
       data = {
         mID: mID,
         sort: sort,
@@ -130,6 +144,9 @@
         limit: limit
       };
       return this._quantifyHTTP("get", "displaymetrics", data, callback);
+    },
+    getProjectStats: function(callback) {
+      return this._quantifyHTTP("get", "projectstats", {}, callback);
     },
     _quantifyHTTP: function(method, entity, data, callback) {
       var qntData, url, xhr;
@@ -151,6 +168,6 @@
 
   window.qnt = quantifyObject;
 
-  console.log("Ran");
+  console.log("Quantify Library Launched");
 
 }).call(this);

@@ -16,7 +16,7 @@ quantifyObject =
     _version: "0.0.1"
     _base_url: "https://www.qnt.io/api"
     # _base_url: "http://localhost:5000/api"
-    _project: "earth_tapestry"    
+    _project: ""    
     _key: "key"
     _user: ""
     
@@ -60,6 +60,16 @@ quantifyObject =
         else
             return false
 
+    getContent: (cID, callback) ->
+        data = 
+            cID: cID
+        @_quantifyHTTP("get", "content", data, callback)
+
+    getScores: (cID, callback) ->
+        data = 
+            cID: cID
+        @_quantifyHTTP("get", "scores", data, callback)
+
     getSearchResults: (mID, metric_score, [skip, limit]..., callback) -> 
         data = 
             mID: mID
@@ -86,10 +96,10 @@ quantifyObject =
         data = 
             mID: mID
             mode: mode
-            num_desired_contestants: num_desired_contestantso
+            num_desired_contestants: num_desired_contestants
         @_quantifyHTTP("get", "contestants", data, callback)
 
-    getResults: (mID, [sort, skip, limit]..., callback) ->
+    getResults: (mID, [limit, skip, sort]..., callback) ->
         data = 
             mID: mID
             sort: sort
@@ -103,6 +113,10 @@ quantifyObject =
             limit: limit
         @_quantifyHTTP("get", "displaymetrics", data, callback)
 
+    getProjectStats: (callback) -> 
+        @_quantifyHTTP("get", "projectstats", {}, callback)
+
+
     # Good code snippets here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
     # HTTP Method abstracting the need to insert pID and key
     _quantifyHTTP: (method, entity, data, callback) -> 
@@ -114,11 +128,11 @@ quantifyObject =
         xhr.overrideMimeType("application/json"); 
         xhr.withCredentials = true;
         xhr.onload = (resp) ->
-            callback(JSON.parse(resp.target.responseText))
-            # console.log(xhr.getAllResponseHeaders().toLowerCase());
+          callback JSON.parse(resp.target.responseText)
         xhr.open(method, url, true)
         xhr.send()
         
 
 window.qnt = quantifyObject
-console.log("Ran")
+console.log("Quantify Library Launched")
+
