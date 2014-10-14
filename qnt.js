@@ -26,16 +26,18 @@
     _project: "",
     _key: "key",
     _user: "",
-    init: function(projectName, key) {
+    init: function(projectName, key, callback) {
       this._project = projectName;
       this._key = key;
       this._quantifyHTTP("get", "checkusercookie", {}, function(checkCookieResult) {
         if (checkCookieResult[0]['uID']) {
-          return qnt._user = checkCookieResult[0]['uID'];
+          qnt._user = checkCookieResult[0]['uID'];
+          return callback();
         } else {
           console.log("No cookie found. Creating new user");
-          return qnt._quantifyHTTP("get", "createuser", {}, function(e) {
-            return qnt._user = e['uID'];
+          return qnt._quantifyHTTP("post", "createuser", {}, function(e) {
+            qnt._user = e['uID'];
+            return callback();
           });
         }
       });
@@ -51,12 +53,6 @@
     },
     getProjectName: function() {
       return this._project;
-    },
-    checkUserNameCookie: function(callback) {
-      return this._quantifyHTTP("get", "checkusercookie", {}, callback);
-    },
-    createUserName: function(callback) {
-      return this._quantifyHTTP("get", "createuser", {}, callback);
     },
     setAccount: function(user) {
       if (validatedUser(user)) {
@@ -147,6 +143,21 @@
     },
     getProjectStats: function(callback) {
       return this._quantifyHTTP("get", "projectstats", {}, callback);
+    },
+    getUserData: function(uID, callback) {
+      var data;
+      data = {
+        uID: uID
+      };
+      return this._quantifyHTTP("get", "userdata", data, callback);
+    },
+    addUserData: function(user_data, callback) {
+      var data;
+      data = {
+        uID: this._user,
+        user_data: user_data
+      };
+      return this._quantifyHTTP("post", "userdata", data, callback);
     },
     _quantifyHTTP: function(method, entity, data, callback) {
       var qntData, url, xhr;

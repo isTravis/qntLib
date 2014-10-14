@@ -15,14 +15,14 @@ getAccountName = () ->
 quantifyObject = 
     _version: "0.0.1"
     _base_url: "https://www.qnt.io/api"
-    # _base_url: "http://localhost:5000/api"
+    # _base_url: "http://localhost:8888/api"
     _project: ""    
     _key: "key"
     _user: ""
     
     
 
-    init: (projectName, key)->
+    init: (projectName, key, callback)->
         @_project = projectName
         @_key = key
 
@@ -31,13 +31,16 @@ quantifyObject =
             # If you found a cookie - awesome. Set user 
             if checkCookieResult[0]['uID']
                 qnt._user = checkCookieResult[0]['uID']
+                return callback()
 
             # If you didn't find a cookie, else, create a new username and then set current user                
             else
                 console.log "No cookie found. Creating new user"
-                qnt._quantifyHTTP("get", "createuser", {}, (e)->
+                qnt._quantifyHTTP("post", "createuser", {}, (e)->
                     qnt._user=e['uID']
+                    return callback()
                 )
+            
         )
         return
 
@@ -46,11 +49,11 @@ quantifyObject =
     getUser: -> @_user
     getProjectName: -> @_project
 
-    checkUserNameCookie: (callback) ->
-        @_quantifyHTTP("get", "checkusercookie", {}, callback)
+    # checkUserNameCookie: (callback) ->
+    #     @_quantifyHTTP("get", "checkusercookie", {}, callback)
 
-    createUserName: (callback) ->
-        @_quantifyHTTP("get", "createuser", {}, callback)
+    # createUserName: (callback) ->
+    #     @_quantifyHTTP("get", "createuser", {}, callback)
 
     setAccount: (user) -> 
         # TODO Validate user
@@ -116,6 +119,18 @@ quantifyObject =
     getProjectStats: (callback) -> 
         @_quantifyHTTP("get", "projectstats", {}, callback)
 
+    getUserData: (uID, callback) ->
+        data =
+            uID: uID
+        @_quantifyHTTP("get", "userdata", data, callback)
+
+    addUserData: (user_data, callback) -> 
+        data = 
+            uID: @_user
+            user_data: user_data
+        @_quantifyHTTP("post", "userdata", data, callback)   
+
+
 
     # Good code snippets here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
     # HTTP Method abstracting the need to insert pID and key
@@ -131,7 +146,7 @@ quantifyObject =
           callback JSON.parse(resp.target.responseText)
         xhr.open(method, url, true)
         xhr.send()
-        
+
 
 window.qnt = quantifyObject
 console.log("Quantify Library Launched")
