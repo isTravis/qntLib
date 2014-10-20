@@ -8,6 +8,18 @@ getQueryString = (obj) ->
             s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
     s.join("&")
 
+checkLocalCookie = ->
+  name = "qnt_uID="
+  ca = document.cookie.split(";")
+  i = 0
+
+  while i < ca.length
+    c = ca[i]
+    c = c.substring(1)  while c.charAt(0) is " "
+    return c.substring(name.length, c.length)  unless c.indexOf(name) is -1
+    i++
+  ""
+
 
 getAccountName = () ->
     return
@@ -28,16 +40,21 @@ quantifyObject =
 
         # Check for cookie
         @_quantifyHTTP("get", "checkusercookie", {}, (checkCookieResult)->
-            # If you found a cookie - awesome. Set user 
-            if checkCookieResult[0]['uID']
+            
+            if checkCookieResult[0]['uID'] # If it allows and has a cross-domain cookie (argh, Safari!), set user.
                 qnt._user = checkCookieResult[0]['uID']
                 return callback()
 
-            # If you didn't find a cookie, else, create a new username and then set current user                
-            else
+            else if checkLocalCookie() # If we don't have cross-domain, check for a local cookie
+                qnt._user = checkLocalCookie()
+                return callback()
+                            
+            else # Else, we didn't find a cookie, create a new username and then set current user. Set local cookie of Safari
                 console.log "No cookie found. Creating new user"
                 qnt._quantifyHTTP("post", "createuser", {}, (e)->
                     qnt._user=e['uID']
+                    # For Safari, set a local cookie:
+                    document.cookie = "qnt_uID=" + e["uID"] + "; expires=Tue, 15 Nov 2050 12:00:00 UTC"  if (navigator.userAgent.search("Safari") >= 0 and navigator.userAgent.search("Chrome") < 0) or navigator.userAgent.match(/(iPad|iPhone|iPod touch);.*CPU.*OS 7_\d/i)
                     return callback()
                 )
             
@@ -102,7 +119,7 @@ quantifyObject =
             num_desired_contestants: num_desired_contestants
         @_quantifyHTTP("get", "contestants", data, callback)
 
-    getResults: (mID, [limit, skip, sort]..., callback) ->
+    getResults: (mID, [skip, limit, sort]..., callback) ->
         data = 
             mID: mID
             sort: sort

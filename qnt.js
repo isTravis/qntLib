@@ -3,7 +3,7 @@
 /* Copyright (c) 2014 MIT Media Lab, https://qnt.io */
 
 (function() {
-  var getAccountName, getQueryString, quantifyObject,
+  var checkLocalCookie, getAccountName, getQueryString, quantifyObject,
     __slice = [].slice;
 
   getQueryString = function(obj) {
@@ -16,6 +16,24 @@
       }
     }
     return s.join("&");
+  };
+
+  checkLocalCookie = function() {
+    var c, ca, i, name;
+    name = "qnt_uID=";
+    ca = document.cookie.split(";");
+    i = 0;
+    while (i < ca.length) {
+      c = ca[i];
+      while (c.charAt(0) === " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) !== -1) {
+        return c.substring(name.length, c.length);
+      }
+      i++;
+    }
+    return "";
   };
 
   getAccountName = function() {};
@@ -33,10 +51,16 @@
         if (checkCookieResult[0]['uID']) {
           qnt._user = checkCookieResult[0]['uID'];
           return callback();
+        } else if (checkLocalCookie()) {
+          qnt._user = checkLocalCookie();
+          return callback();
         } else {
           console.log("No cookie found. Creating new user");
           return qnt._quantifyHTTP("post", "createuser", {}, function(e) {
             qnt._user = e['uID'];
+            if ((navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) || navigator.userAgent.match(/(iPad|iPhone|iPod touch);.*CPU.*OS 7_\d/i)) {
+              document.cookie = "qnt_uID=" + e["uID"] + "; expires=Tue, 15 Nov 2050 12:00:00 UTC";
+            }
             return callback();
           });
         }
@@ -122,7 +146,7 @@
     getResults: function() {
       var callback, data, limit, mID, skip, sort, _arg, _i;
       mID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
-      limit = _arg[0], skip = _arg[1], sort = _arg[2];
+      skip = _arg[0], limit = _arg[1], sort = _arg[2];
       data = {
         mID: mID,
         sort: sort,
