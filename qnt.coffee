@@ -5,7 +5,7 @@ getQueryString = (obj) ->
     s = []
     for k, v of obj
         if v
-            if v.split(",").length>1 # If we have a comma separated string of values...
+            if String(v).split(",").length>1 # If we have a comma separated string of values...
                 j = 0
                 while j < v.split(",").length
                   s.push encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j])

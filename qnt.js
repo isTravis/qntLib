@@ -12,7 +12,7 @@
     for (k in obj) {
       v = obj[k];
       if (v) {
-        if (v.split(",").length > 1) {
+        if (String(v).split(",").length > 1) {
           j = 0;
           while (j < v.split(",").length) {
             s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j]));
