@@ -12,11 +12,15 @@
     for (k in obj) {
       v = obj[k];
       if (v) {
-        if (String(v).split(",").length > 1) {
-          j = 0;
-          while (j < v.split(",").length) {
-            s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j]));
-            j++;
+        if (typeof v === "string") {
+          if (String(v).split(",").length > 1) {
+            j = 0;
+            while (j < v.split(",").length) {
+              s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j]));
+              j++;
+            }
+          } else {
+            s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
           }
         } else {
           s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));

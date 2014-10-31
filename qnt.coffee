@@ -5,14 +5,19 @@ getQueryString = (obj) ->
     s = []
     for k, v of obj
         if v
-            if String(v).split(",").length>1 # If we have a comma separated string of values...
-                j = 0
-                while j < v.split(",").length
-                  s.push encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j])
-                  j++
+            if typeof v == "string"
+                if String(v).split(",").length>1 # If we have a comma separated string of values...
+                    j = 0
+                    while j < v.split(",").length
+                      s.push encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j])
+                      j++
+                else # If it's just a single value...
+                    s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
             else # If it's just a single value...
                 s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
     s.join("&")
+
+
 
 checkLocalCookie = ->
   name = "qnt_uID="
