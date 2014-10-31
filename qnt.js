@@ -7,12 +7,20 @@
     __slice = [].slice;
 
   getQueryString = function(obj) {
-    var k, s, v;
+    var j, k, s, v;
     s = [];
     for (k in obj) {
       v = obj[k];
       if (v) {
-        s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        if (v.split(",").length > 1) {
+          j = 0;
+          while (j < v.split(",").length) {
+            s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j]));
+            j++;
+          }
+        } else {
+          s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        }
       }
     }
     return s.join("&");

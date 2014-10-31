@@ -5,7 +5,13 @@ getQueryString = (obj) ->
     s = []
     for k, v of obj
         if v
-            s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
+            if v.split(",").length>1 # If we have a comma separated string of values...
+                j = 0
+                while j < v.split(",").length
+                  s.push encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j])
+                  j++
+            else # If it's just a single value...
+                s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v))
     s.join("&")
 
 checkLocalCookie = ->
