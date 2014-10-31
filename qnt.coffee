@@ -6,7 +6,7 @@ getQueryString = (obj) ->
     for k, v of obj
         if v
             if typeof v == "string"
-                if String(v).split(",").length>1 # If we have a comma separated string of values...
+                if String(v).split(",").length>1 and v.split("{").length < 2# If we have a comma separated string of values, but it's not an object -i.e. not a userData upload...
                     j = 0
                     while j < v.split(",").length
                       s.push encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j])

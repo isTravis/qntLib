@@ -13,7 +13,7 @@
       v = obj[k];
       if (v) {
         if (typeof v === "string") {
-          if (String(v).split(",").length > 1) {
+          if (String(v).split(",").length > 1 && v.split("{").length < 2) {
             j = 0;
             while (j < v.split(",").length) {
               s.push(encodeURIComponent(k) + "=" + encodeURIComponent(v.split(",")[j]));
