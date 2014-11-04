@@ -112,6 +112,14 @@
       };
       return this._quantifyHTTP("get", "scores", data, callback);
     },
+    getScores_user: function(uID, cID, callback) {
+      var data;
+      data = {
+        uID: uID,
+        cID: cID
+      };
+      return this._quantifyHTTP("get", "user_scores", data, callback);
+    },
     getSearchResults: function() {
       var callback, data, limit, mID, metric_score, skip, _arg, _i;
       mID = arguments[0], metric_score = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
@@ -123,6 +131,19 @@
         limit: limit
       };
       return this._quantifyHTTP("get", "search", data, callback);
+    },
+    getSearchResults_user: function() {
+      var callback, data, limit, mID, metric_score, skip, uID, _arg, _i;
+      uID = arguments[0], mID = arguments[1], metric_score = arguments[2], _arg = 5 <= arguments.length ? __slice.call(arguments, 3, _i = arguments.length - 1) : (_i = 3, []), callback = arguments[_i++];
+      skip = _arg[0], limit = _arg[1];
+      data = {
+        uID: uID,
+        mID: mID,
+        metric_score: metric_score,
+        skip: skip,
+        limit: limit
+      };
+      return this._quantifyHTTP("get", "user_search", data, callback);
     },
     getMetrics: function(mID) {
       var data;
@@ -155,6 +176,18 @@
       };
       return this._quantifyHTTP("get", "contestants", data, callback);
     },
+    getContestants_user: function() {
+      var callback, data, mID, mode, num_desired_contestants, uID, _arg, _i;
+      uID = arguments[0], mID = arguments[1], mode = arguments[2], _arg = 5 <= arguments.length ? __slice.call(arguments, 3, _i = arguments.length - 1) : (_i = 3, []), callback = arguments[_i++];
+      num_desired_contestants = _arg[0];
+      data = {
+        uID: uID,
+        mID: mID,
+        mode: mode,
+        num_desired_contestants: num_desired_contestants
+      };
+      return this._quantifyHTTP("get", "user_contestants", data, callback);
+    },
     getResults: function() {
       var callback, data, limit, mID, skip, sort, _arg, _i;
       mID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
@@ -166,6 +199,19 @@
         limit: limit
       };
       return this._quantifyHTTP("get", "results", data, callback);
+    },
+    getResults_user: function() {
+      var callback, data, limit, mID, skip, sort, uID, _arg, _i;
+      uID = arguments[0], mID = arguments[1], _arg = 4 <= arguments.length ? __slice.call(arguments, 2, _i = arguments.length - 1) : (_i = 2, []), callback = arguments[_i++];
+      skip = _arg[0], limit = _arg[1], sort = _arg[2];
+      data = {
+        uID: uID,
+        mID: mID,
+        sort: sort,
+        skip: skip,
+        limit: limit
+      };
+      return this._quantifyHTTP("get", "user_results", data, callback);
     },
     getDisplayMetrics: function() {
       var callback, data, limit, mode, _arg, _i;

@@ -101,6 +101,12 @@ quantifyObject =
             cID: cID
         @_quantifyHTTP("get", "scores", data, callback)
 
+    getScores_user: (uID, cID, callback) ->
+        data = 
+            uID: uID
+            cID: cID
+        @_quantifyHTTP("get", "user_scores", data, callback)
+
     getSearchResults: (mID, metric_score, [skip, limit]..., callback) -> 
         data = 
             mID: mID
@@ -108,6 +114,15 @@ quantifyObject =
             skip: skip
             limit: limit
         @_quantifyHTTP("get", "search", data, callback)
+
+    getSearchResults_user: (uID, mID, metric_score, [skip, limit]..., callback) -> 
+        data = 
+            uID: uID
+            mID: mID
+            metric_score: metric_score
+            skip: skip
+            limit: limit
+        @_quantifyHTTP("get", "user_search", data, callback)
 
     getMetrics: (mID) ->
         data = 
@@ -130,6 +145,14 @@ quantifyObject =
             num_desired_contestants: num_desired_contestants
         @_quantifyHTTP("get", "contestants", data, callback)
 
+    getContestants_user: (uID, mID, mode, [num_desired_contestants]..., callback) ->
+        data = 
+            uID: uID
+            mID: mID
+            mode: mode
+            num_desired_contestants: num_desired_contestants
+        @_quantifyHTTP("get", "user_contestants", data, callback)
+
     getResults: (mID, [skip, limit, sort]..., callback) ->
         data = 
             mID: mID
@@ -137,6 +160,15 @@ quantifyObject =
             skip: skip
             limit: limit
         @_quantifyHTTP("get", "results", data, callback)
+
+    getResults_user: (uID, mID, [skip, limit, sort]..., callback) ->
+        data = 
+            uID: uID
+            mID: mID
+            sort: sort
+            skip: skip
+            limit: limit
+        @_quantifyHTTP("get", "user_results", data, callback)
 
     getDisplayMetrics: (mode, [limit]..., callback) -> 
         data =
