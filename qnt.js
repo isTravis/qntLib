@@ -188,6 +188,22 @@
       };
       return this._quantifyHTTP("get", "user_contestants", data, callback);
     },
+    getUserVotes: function() {
+      var callback, data, limit, uID, _arg, _i;
+      uID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];
+      limit = _arg[0];
+      if (typeof limit !== "undefined") {
+        data = {
+          uID: uID,
+          limit: limit.toString()
+        };
+      } else {
+        data = {
+          uID: uID
+        };
+      }
+      return this._quantifyHTTP("get", "uservotes", data, callback);
+    },
     getResults: function() {
       var callback, data, limit, mID, skip, sort, _arg, _i;
       mID = arguments[0], _arg = 3 <= arguments.length ? __slice.call(arguments, 1, _i = arguments.length - 1) : (_i = 1, []), callback = arguments[_i++];

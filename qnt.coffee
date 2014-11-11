@@ -153,6 +153,17 @@ quantifyObject =
             num_desired_contestants: num_desired_contestants
         @_quantifyHTTP("get", "user_contestants", data, callback)
 
+    getUserVotes: (uID, [limit]..., callback) ->
+        if typeof limit isnt "undefined"
+            data =
+                uID: uID
+                limit: limit.toString()
+        else
+            data = 
+                uID:uID
+
+        @_quantifyHTTP("get", "uservotes", data, callback)
+
     getResults: (mID, [skip, limit, sort]..., callback) ->
         data = 
             mID: mID
