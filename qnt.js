@@ -257,6 +257,15 @@
       };
       return this._quantifyHTTP("post", "userdata", data, callback);
     },
+    buildScores: function() {
+      var callback, data, uID, _arg, _i;
+      _arg = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), callback = arguments[_i++];
+      uID = _arg[0];
+      data = {
+        uID: uID
+      };
+      return this._quantifyHTTP("get", "buildscores", data, callback);
+    },
     _quantifyHTTP: function(method, entity, data, callback) {
       var qntData, url, xhr;
       qntData = {

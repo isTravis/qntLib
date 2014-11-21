@@ -201,6 +201,11 @@ quantifyObject =
             user_data: user_data
         @_quantifyHTTP("post", "userdata", data, callback)   
 
+    buildScores: ([uID]...,callback) -> 
+        data = 
+            uID: uID
+        @_quantifyHTTP("get", "buildscores", data, callback)   
+
 
 
     # Good code snippets here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
