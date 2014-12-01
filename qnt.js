@@ -52,7 +52,7 @@
 
   quantifyObject = {
     _version: "0.0.1",
-    _base_url: "https://www.qnt.io/api",
+    _base_url: "http://localhost:5000/api",
     _project: "",
     _key: "key",
     _user: "",
@@ -268,19 +268,36 @@
     },
     _quantifyHTTP: function(method, entity, data, callback) {
       var qntData, url, xhr;
-      qntData = {
-        pID: this._project,
-        key: this._key
-      };
-      url = this._base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
-      xhr = new XMLHttpRequest();
-      xhr.overrideMimeType("application/json");
-      xhr.withCredentials = true;
-      xhr.onload = function(resp) {
-        return callback(JSON.parse(resp.target.responseText));
-      };
-      xhr.open(method, url, true);
-      return xhr.send();
+      if (method === 'post') {
+        qntData = {
+          pID: this._project,
+          key: this._key
+        };
+        url = this._base_url + "/" + entity;
+        xhr = new XMLHttpRequest();
+        xhr.overrideMimeType("application/json");
+        xhr.withCredentials = true;
+        xhr.onload = function(resp) {
+          return callback(JSON.parse(resp.target.responseText));
+        };
+        xhr.open(method, url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        return xhr.send(getQueryString(data) + "&" + getQueryString(qntData));
+      } else {
+        qntData = {
+          pID: this._project,
+          key: this._key
+        };
+        url = this._base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData);
+        xhr = new XMLHttpRequest();
+        xhr.overrideMimeType("application/json");
+        xhr.withCredentials = true;
+        xhr.onload = function(resp) {
+          return callback(JSON.parse(resp.target.responseText));
+        };
+        xhr.open(method, url, true);
+        return xhr.send();
+      }
     }
   };
 

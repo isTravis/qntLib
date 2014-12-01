@@ -37,8 +37,8 @@ getAccountName = () ->
 
 quantifyObject = 
     _version: "0.0.1"
-    _base_url: "https://www.qnt.io/api"
-    # _base_url: "http://localhost:8888/api"
+    # _base_url: "https://www.qnt.io/api"
+    _base_url: "http://localhost:5000/api"
     _project: ""    
     _key: "key"
     _user: ""
@@ -211,17 +211,32 @@ quantifyObject =
     # Good code snippets here: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
     # HTTP Method abstracting the need to insert pID and key
     _quantifyHTTP: (method, entity, data, callback) -> 
-        qntData =
-            pID: @_project
-            key: @_key
-        url = @_base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData)
-        xhr = new XMLHttpRequest()
-        xhr.overrideMimeType("application/json"); 
-        xhr.withCredentials = true;
-        xhr.onload = (resp) ->
-          callback JSON.parse(resp.target.responseText)
-        xhr.open(method, url, true)
-        xhr.send()
+        if method is 'post'
+            qntData =
+                pID: @_project
+                key: @_key
+            url = @_base_url + "/" + entity
+            xhr = new XMLHttpRequest()
+            xhr.overrideMimeType("application/json"); 
+            xhr.withCredentials = true;
+            xhr.onload = (resp) ->
+              callback JSON.parse(resp.target.responseText)
+            xhr.open(method, url, true)
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send(getQueryString(data) + "&" + getQueryString(qntData))
+        else
+            qntData =
+                pID: @_project
+                key: @_key
+            url = @_base_url + "/" + entity + "?" + getQueryString(data) + "&" + getQueryString(qntData)
+            xhr = new XMLHttpRequest()
+            xhr.overrideMimeType("application/json"); 
+            xhr.withCredentials = true;
+            xhr.onload = (resp) ->
+              callback JSON.parse(resp.target.responseText)
+            xhr.open(method, url, true)
+            xhr.send()
+
 
 
 window.qnt = quantifyObject
