@@ -52,7 +52,7 @@
 
   quantifyObject = {
     _version: "0.0.1",
-    _base_url: "http://localhost:5000/api",
+    _base_url: "https://www.qnt.io/api",
     _project: "",
     _key: "key",
     _user: "",
