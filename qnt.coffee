@@ -96,6 +96,12 @@ quantifyObject =
             cID: cID
         @_quantifyHTTP("get", "content", data, callback)
 
+    getContentByIndex: (index, callback) ->
+        data = 
+            index: index
+        @_quantifyHTTP("get", "contentbyindex", data, callback)
+
+
     getScores: (cID, callback) ->
         data = 
             cID: cID

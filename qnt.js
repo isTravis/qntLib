@@ -105,6 +105,13 @@
       };
       return this._quantifyHTTP("get", "content", data, callback);
     },
+    getContentByIndex: function(index, callback) {
+      var data;
+      data = {
+        index: index
+      };
+      return this._quantifyHTTP("get", "contentbyindex", data, callback);
+    },
     getScores: function(cID, callback) {
       var data;
       data = {
